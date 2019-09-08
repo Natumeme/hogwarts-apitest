@@ -3,6 +3,8 @@
 
 import requests
 
+class BaseApi(object):
+    pass
 
 class ApihttbinGet:
     url = "http://httpbin.org/get"
