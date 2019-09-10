@@ -1,0 +1,56 @@
+1.requests.request(method,url,**kwargs)
+构造并发送一个Request对象，返回一个Response对象，支撑各方法的基础方法
+method：新建Request对象要使用的HTTP方法，包括：GET，POST，PUT，DELETE等
+url：新建Request对象的URL链接
+**kwargs：13个控制访问的可选参数
+（1）params：字典或字节序列，作为参数增加到url中
+
+paramsValue={'key1':'value1','key2':'value2'}
+r=requests.request('GET','http://www.baidu.com',params=paramsValue)
+print(r.url)
+#执行结果：http://www.baidu.com/?key1=value1&key2=value2；若paramsValue为字符串，结果相仿
+
+2）data：字典、字节序列，文件，作为Request对象body的内容
+#字典
+dataDicValue={'key1':'value1','key2':'value2'}
+r=requests.request('GET','http://www.baidu.com',data=dataDicValue)
+#字节序列
+dataStrValue='test'
+r=requests.request('GET','http://www.baidu.com',data=dataStrValue)
+#文件
+dataFileValue={'file':open('test.csv','rb')}
+r=requests.request('POST','http://www.baidu.com',data=dataFileValue)
+
+3）json：JSON格式的数据，作为Request对象body的内容
+jsonValue={'key1':'value1','key2':'value2'}
+r=requests.request('POST','http://www.baidu.com',json=jsonValue)
+
+4）headers：字典格式，HTTP请求头，作为Request对象Header的内容
+headerValue={'user-agent': 'Chrome/10'}
+r=requests.request('POST','http://www.baidu.com',headers=headerValue)
+print(r.headers)
+#{'Accept-Ranges': 'bytes', 'Cache-Control': 'max-age=86400', 'Connection': 'Keep-Alive'
+
+5）cookies：字典或CookieJar,Request中的cookie
+#字典
+cookieDicValue={'key1':'value1','key2':'value2'}
+r=requests.request('POST','http://www.baidu.com',cookies=cookieDicValue)
+print(r.cookies)
+#<RequestsCookieJar[]>
+#CookieJar
+cookiesJarValue=cookiejar.CookieJar()
+r=requests.request('POST','http://www.baidu.com',cookies=cookiesJarValue)
+print(r.cookies)
+#<RequestsCookieJar[]>
+
+6）files：字典,形式为{filename: fileobject}，表示要上传的多个部分
+filesValue = {'file': open('test.csv', 'rb')}
+r = requests.request('POST', 'http://www.baidu.com', files=filesValue)
+
+（7）auth：Auth 句柄或 (user, pass) 元组
+#Auth
+authBasicValue=HTTPBasicAuth('username','password')
+r = requests.request('POST', 'http://www.baidu.com', auth=authBasicValue)
+#(user,pass)元组
+authTupValue=('username','password')
+r=requests.request('POST','http://www.baidu.com',auth=authTupValue)
