@@ -10,6 +10,7 @@ class BaseApi(object):
     data = ""
     json = {}
 
+
     def set_params(self,**params):
         self.params = params
         return self
