@@ -4,23 +4,27 @@
 import requests
 
 class BaseApi(object):
-    pass
-
-class ApihttbinGet(BaseApi):
-    url = "http://httpbin.org/get"
-    params=None
     method = "GET"
-    headers = {"accept":"application/json"}
+    url = ""
+    params = {}
+    headers = {}
+    data = ""
+    json = {}
 
     def set_params(self,**params):
         self.params = params
         return self
 
     def run(self):
-        self.response = requests.get(
+        self.response = requests.request(
+            self.method,
             self.url,
+            params=self.params,
             headers=self.headers,
-            params=self.params)
+            data=self.data,
+            json=self.json
+
+        )
         return self
 
     def validate(self,key,expected_value):
@@ -28,29 +32,40 @@ class ApihttbinGet(BaseApi):
         assert actual_value == expected_value
         return self
 
-class ApihttpbinPost(BaseApi):
-    url = "http://httpbin.org/post"
-    method = "POST"
-    headers = {"accept": "application/json"}
-    json = {"abc":123}
-
-    ApihttbinGet().run()\
-        .validate("status_code",200)
-        # .validate("headers.server","nginx")\
-        # .validate("json.url","http://httpbin.org/post")
+class ApihttbinGet(BaseApi):
+    url = "http://httpbin.org/get"
+    params={}
+    method = "GET"
+    headers = {"accept":"application/json"}
+    data = ""
+    json = {}
 
 def test_httpbin_get():
-    # resp=requests.get("http://httpbin.org/get",
-    #          headers={"accept":"application/json"}
-    #          )
-    # assert resp.status_code==200
     ApihttbinGet().run() \
         .validate("status_code", 200)
-    # .validate("headers.server","nginx")\
-    # .validate("json.url","http://httpbin.org/post")
 
 def test_httpbin_get_with_params():
-    ApihttbinGet().set_params(abc=123,xyz=456)\
+    ApihttbinGet()\
+        .set_params(abc=123,xyz=456)\
         .run()\
         .validate("status_code",200)
 
+class ApihttpbinPost(BaseApi):
+    url = "http://httpbin.org/post"
+    method = "POST"
+    params = {}
+    headers = {"accept": "application/json"}
+    data = "abc=123"
+    json = {"abc":123}
+
+    def set_data(self,data):
+        self.data = data
+        return self
+
+
+    def set_json(self,json_data):
+        self.json = json_data
+        return self
+
+def test_httpbin_post():
+    ApihttpbinPost().set_json({"abc":456}).run().validate("status_code", 200)
