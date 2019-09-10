@@ -16,13 +16,15 @@ class ApihttbinGet(BaseApi):
 
 def test_httpbin_get():
     ApihttbinGet().run() \
-        .validate("status_code", 200)
+        .validate("status_code", 200) \
+	    .validate("headers.server", "nginx")
 
 def test_httpbin_get_with_params():
     ApihttbinGet()\
         .set_params(abc=123,xyz=456)\
         .run()\
-        .validate("status_code",200)
+        .validate("status_code",200) \
+	    .validate("headers.server", "nginx")
 
 class ApihttpbinPost(BaseApi):
     url = "http://httpbin.org/post"
@@ -33,4 +35,8 @@ class ApihttpbinPost(BaseApi):
     json = {"abc":123}
 
 def test_httpbin_post():
-    ApihttpbinPost().set_json({"abc":456}).run().validate("status_code", 200)
+    ApihttpbinPost()\
+	    .set_json({"abc":456})\
+	    .run()\
+	    .validate("status_code", 200)\
+        .validate("headers.server","nginx")
