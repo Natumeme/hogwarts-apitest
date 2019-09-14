@@ -1,25 +1,16 @@
 #!usr/bin/env python
 #-*- coding:utf-8 -*-
 
-import requests
+from tests.api.httpbin import ApihttbinGet
 
-from apitest.api import BaseApi
-
-
-class ApihttbinGet(BaseApi):
-    url = "http://httpbin.org/get"
-    params={}
-    method = "GET"
-    headers = {"accept":"application/json"}
-    data = ""
-    json = {}
 
 def test_httpbin_get():
     ApihttbinGet().run()\
         .validate("status_code", 200)\
 	    .validate("headers.server", "nginx")\
-        .validate("json().url","https://httpbin.org/get")\
-        .validate("json().args",{})
+        .validate("json().url", "https://httpbin.org/get")\
+        .validate("json().args", {})\
+        .validate("json().headers.Accept", "application/json")
 
 def test_httpbin_get_with_params():
     ApihttbinGet()\
@@ -28,13 +19,7 @@ def test_httpbin_get_with_params():
         .validate("status_code",200)\
 	    .validate("headers.server", "nginx")
 
-class ApihttpbinPost(BaseApi):
-    url = "http://httpbin.org/post"
-    method = "POST"
-    params = {}
-    headers = {"accept": "application/json"}
-    data = "abc=123"
-    json = {"abc":123}
+
 
 def test_httpbin_post():
     ApihttpbinPost()\
