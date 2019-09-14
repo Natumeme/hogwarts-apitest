@@ -15,15 +15,17 @@ class ApihttbinGet(BaseApi):
     json = {}
 
 def test_httpbin_get():
-    ApihttbinGet().run() \
-        .validate("status_code", 200) \
-	    .validate("headers.server", "nginx")
+    ApihttbinGet().run()\
+        .validate("status_code", 200)\
+	    .validate("headers.server", "nginx")\
+        .validate("json().url","https://httpbin.org/get")\
+        .validate("json().args",{})
 
 def test_httpbin_get_with_params():
     ApihttbinGet()\
         .set_params(abc=123,xyz=456)\
         .run()\
-        .validate("status_code",200) \
+        .validate("status_code",200)\
 	    .validate("headers.server", "nginx")
 
 class ApihttpbinPost(BaseApi):
