@@ -25,7 +25,9 @@ def test_httpbin_post():
 		.set_json({"abc":456})\
 		.run()\
 		.validate("status_code", 200)\
-		.validate("headers.server","nginx")
+		.validate("headers.server","nginx") \
+		.validate("json().url", "https://httpbin.org/post")\
+		.validate("json().json.abc",456)
 
 def test_httpbin_parameters_share():
 	user_id="jdk129"
@@ -41,4 +43,5 @@ def test_httpbin_parameters_share():
 		.run() \
 		.validate("status_code", 200) \
 		.validate("headers.server", "nginx")\
-		.validate("json().url", "https://httpbin.org/post")
+		.validate("json().url", "https://httpbin.org/post")\
+		.validate("json().json.user_id", "jdk129")
