@@ -98,4 +98,5 @@ def test_httpbin_login_status():
 		.set_json({"abc": 123}) \
 		.run().get_response()
 	request_headers = resp.request.headers
+	assert 'freeform=123' in request_headers["Cookie"]
 	print("request_headers====",request_headers)
