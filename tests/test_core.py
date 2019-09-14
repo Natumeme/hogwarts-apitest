@@ -71,10 +71,31 @@ def test_httpbin_setcookies():
 	assert freeform2 == "456"
 
 
+def test_httpbin_parameters_extract():
+	#接口参数依赖
+	#step1:get value
+	freeform = ApihttpbinGetCookies()\
+		.set_cookie("freeform","123")\
+		.run()\
+		.extract("json().cookies.freeform")
+	assert freeform == "123"
 
+	#step2:use value as parameter
+	ApihttpbinPost() \
+		.set_json({"freeform": freeform})\
+		.run()\
+		.validate("status_code", 200) \
+		.validate("headers.server", "nginx") \
+		.validate("json().url", "https://httpbin.org/post") \
+		.validate("json().json.freeform", freeform)
 
-# def test_httpbin_parameters_extract():
-# 	#接口参数依赖
-# 	freeform = ApihttpbinGetCookies()\
-# 		.run().extract("json().cookies.freeform")
-# 	assert freeform == 123
+def test_httpbin_login_status():
+	#step1:login and get cookie
+	ApihttpbinSetCookies().set_params(freeform="123").run()
+
+	#step2:
+	resp = ApihttpbinPost() \
+		.set_json({"abc": 123}) \
+		.run().get_response()
+	request_headers = resp.request.headers
+	print("request_headers====",request_headers)
